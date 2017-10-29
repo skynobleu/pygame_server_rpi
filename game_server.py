@@ -25,6 +25,11 @@ waiting = pygame.image.load("assets/waiting.png")
 waitingrect = waiting.get_rect()
 waitingrect.center = (400, 500)
 
+trigger = pygame.image.load("assets/trigger.png")
+triggerrect = waiting.get_rect()
+triggerrect.center = (300, 500)
+
+connected = False
 state = 0
 
 pygame.mixer.pre_init(44100, -16, 2, 2048) # setup mixer to avoid sound lag
@@ -35,9 +40,15 @@ pygame.mixer.music.load('assets/background.mp3')
 
 pygame.mixer.music.play(-1)
 
+
 while True:
     for event in pygame.event.get():
+        #print(event.type)
         if event.type == pygame.QUIT: sys.exit()
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            connected = not connected
+        
+            
     if state == 0:
         welcomerect = welcomerect.move(speed)
         if welcomerect.left < 100 or welcomerect.right > width - 100:
@@ -57,11 +68,14 @@ while True:
             frames = 0
             
         if image_display:
-            screen.blit(waiting, waitingrect)
+            if not connected:
+                screen.blit(waiting, waitingrect)
+            else:
+                screen.blit(trigger, triggerrect)
+
         screen.blit(welcome, welcomerect)
 
         frames += 1
         pygame.display.flip()
-    else:
-        break
+   
 
